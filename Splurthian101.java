@@ -12,8 +12,13 @@ public class Splurthian101
 			String symbol = args[1];
 			System.out.println(name + ", " + symbol + " -> " + valid(name, symbol));
 		}
-		System.out.println(genSymbol(name));
-		System.out.println(enumValues(name));
+		System.out.println(name + " alphabetical symbol: " + genSymbol(name));
+		System.out.println(name + " has " + enumValues(name) + " Splurthian symbol candidates.");
+		/*for(String s : enumBlurthValues(name))
+		{
+			System.out.println(s);
+		}*/
+		System.out.println(name + " has " + enumBlurthValues(name).size() + " Blurthian symbol candidates.");
 	}
 
 	public static boolean valid(String name, String symbol)
@@ -72,5 +77,40 @@ public class Splurthian101
 			}
 		}
 		return list.size();
+	}
+
+	public static LinkedList<String> enumBlurthValues(String name)
+	{
+		//Part of the bonus
+		name = name.toLowerCase();
+		LinkedList<String> list = new LinkedList<String>();
+		String prefix = ""+name.charAt(0);
+		if(name.length() == 1){list.add(name);}
+		else
+		{
+			list.addAll(enumBlurthValues(name.substring(1)));
+			int size = list.size();
+			for(int i = 0; i<size; i++)
+			{
+				list.add(prefix + list.get(i));
+			}
+			list.add(prefix);
+		}
+		list = prune(list);
+		return list;
+	}
+
+	public static LinkedList<String> prune(LinkedList<String> x)
+	{
+		String str;
+		for(int i = 0; i < x.size(); i++)
+		{
+			str = x.get(i);
+			while(x.indexOf(str) != x.lastIndexOf(str))
+			{
+				x.removeLastOccurrence(str);
+			}
+		}
+		return x;
 	}
 }
